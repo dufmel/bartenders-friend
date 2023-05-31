@@ -4,7 +4,8 @@
 
 /* Box Model Hack */
 *{
-    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /******************************************
@@ -16,7 +17,7 @@ body{
     align-items: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     height:100%;
-     background-image: linear-gradient(#CAD2C5, #84A98C, #52796F )
+    background-image: linear-gradient(#CAD2C5, #84A98C, #52796F )
 }
 
 .buttons{
@@ -27,16 +28,28 @@ body{
 
 .recipe{
     display:flex;
-    width: 70vw;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    width: 100vw;
+    
 }
 
 img{
-    margin: 0 auto;
     height: 300px;
     border-radius: 3px;
     box-shadow: 5px 10px 8px;
     animation: flip-vertical-left 1s linear;
+}
+
+.instructions, .ingredients{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:33%;
+    
+}
+
+.materials{
+    display:flex;
 }
 
 /* ----------------------------------------------
@@ -69,19 +82,38 @@ h1{
     font-family: 'Satisfy', cursive;
     font-size: 60px;
     color:#2F3E46;
-    padding-top: .5em;
+    padding: 1em;
 }
 
 h2{
     font-family: 'Satisfy', cursive;
     font-size: 40px;
+    color:#2F3E46;
+    padding: 1em;
 }
 
 h3{
+    text-decoration: underline;
+    font-family: 'Satisfy', cursive;
+    font-size: 30px;
+    color:#2F3E46;
     display:flex;
     flex-direction: column;
     align-items: center;
-    width:33%;
+}
+
+p{
+    font-size: large;
+}
+
+ul{
+    list-style-type: none;
+    font-size: large;
+    padding:.3em;
+}
+
+#measurements{
+    text-align: right;
 }
 
 input{
@@ -113,4 +145,12 @@ button:hover{
 button:active{
     transform:scale(1.1);
     border-radius: 20px;
+}
+
+@media (max-width: 700px){
+    
+    .recipe{
+        display:flex;
+        flex: column;
+    }
 }
