@@ -5,6 +5,9 @@ let measurements = document.getElementById("measurements")
 let image = document.getElementById("image")
 let instructions = document.getElementById("instructions")
 let drinkName = document.getElementById("drink-name")
+let ulMeasurements = document.getElementById("measurements")
+let ulIngredients = document.getElementById("ingredients")
+let li = document.querySelector("li");
 
 //The user will enter a cocktail. Get a cocktail name, photo, and instructions and place them in the DOM
 document.querySelector("#next").addEventListener("click", goForward);
@@ -25,97 +28,100 @@ async function getDrink(){
 }
 
 function render(data){
-  instructions.innerHTML = data.drinks[0].strInstructions;
-  drinkName.innerHTML = data.drinks[0].strDrink;
-  image.src = data.drinks[0].strDrinkThumb;
+  instructions.innerHTML = data.drinks[counter].strInstructions;
+  drinkName.innerHTML = data.drinks[counter].strDrink;
+  image.src = data.drinks[counter].strDrinkThumb;
+  
 }
 
-const items = [];
+let items = [];
+function empty(element){
+  element.innerHTML = ""
+}
 
 function getIngredients(data){
-    for (let i = 0; i<=15; i++){
-      let ingredient = data.drinks[0][`strIngredient${i}`];
-      console.log(ingredient)
+  if (items.length > 0){
+    items = []
+  }
+
+  empty(ulIngredients);
+
+  console.log(ulIngredients);
+
+  for (let i = 0; i<=15; i++){
+      let ingredient = data.drinks[counter][`strIngredient${i}`];
       if(ingredient){
         items.push(ingredient)
       }
-    }
-    items.forEach((item) => {
-      let li = document.createElement("li");
-      li.innerText = item;
-      ingredients.appendChild(li);
-    })
-    
+  }
   
-
-  console.log(items)
+  items.forEach((item) => {
+    let li = document.createElement("li");
+    ingredients.appendChild(li);
+    li.innerHTML += item;
+    });
+  
+    console.log(items)
 }
 
-const measure = [];
+let measure = [];
 
 function getMeasurements(data) {
+    if (measure.length > 0) {
+    measure = [];
+    }
+  
+  empty(ulMeasurements)
+
   for (let i = 0; i <= 15; i++) {
-    let measurement = data.drinks[0][`strMeasure${i}`];
+    let measurement = data.drinks[counter][`strMeasure${i}`];
     console.log(measurement);
     if (measurement) {
-      measure.push(measurement);
+    measure.push(measurement);
     }
   }
-      measure.forEach((item) => {
-        let li = document.createElement("li");
-        li.innerText = `${item} - `;
-        measurements.appendChild(li);
+  
+  measure.forEach((item) => {
+    let li = document.createElement("li");
+    li.innerText = `${item} - `;
+    measurements.appendChild(li);
       });
-
 
   console.log(measure);
 }
 
 
-function goForward() {
-  let drink = document.querySelector("input").value;
+async function goForward() {
+  
+  const drink = document.querySelector("input").value
+  const response = await fetch(
+    `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`
+  );
+  const data = await response.json();
+    
+  if (counter === data.drinks.length - 1) {
+    counter = -1;
+    }
 
-  fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`)
-    .then((res) => res.json()) // parse response as JSON
-    .then((data) => {
-      console.log(data.drinks);
-      if (counter === data.drinks.length - 1) {
-        counter = -1;
-      }
-
-      counter++;
-      document.getElementById("instructions").innerText = data.drinks[counter].strDrink;
-      document.querySelector("img").src = data.drinks[counter].strDrinkThumb;
-      document.getElementById("instructions").innerText =
-        data.drinks[counter].strInstructions;
-
-      // count();
-    })
-    .catch((err) => {
-      console.log(`error ${err}`);
-    });
+    counter++;
+    render(data)
+    getIngredients(data);
+    getMeasurements(data);
 }
 
-function goBack() {
-  let drink = document.querySelector("input").value;
-
-  fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`)
-    .then((res) => res.json()) // parse response as JSON
-    .then((data) => {
-      console.log(data.drinks);
+async function goBack() {
+  const drink = document.querySelector("input").value
+  const response = await fetch(
+    `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`
+  );
+  const data = await response.json();
 
       if (counter === 0) {
         counter = data.drinks.length;
       }
-      counter--;
-      document.getElementById("instructions").innerText =
-        data.drinks[counter].strDrink;
-      document.querySelector("img").src = data.drinks[counter].strDrinkThumb;
-      document.getElementById("instructions").innerText =
-        data.drinks[counter].strInstructions;
-    })
-    .catch((err) => {
-      console.log(`error ${err}`);
-    });
+    counter--;
+    render(data);
+    getIngredients(data);
+    getMeasurements(data);
 }
 
