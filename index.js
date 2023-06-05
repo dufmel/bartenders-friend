@@ -14,6 +14,10 @@ document.querySelector("#next").addEventListener("click", goForward);
 document.querySelector("#back").addEventListener("click", goBack);
 document.querySelector("button").addEventListener("click", getDrink);
 
+function animation() {
+  image.classList.add("flip-vertical-left");
+}
+
 async function getDrink(){
   const drink = document.querySelector("input").value
   const response = await fetch(
@@ -24,6 +28,7 @@ async function getDrink(){
   render(data)
   getIngredients(data)
   getMeasurements(data)
+  animation();
   console.log(data.drinks[0])
 }
 
@@ -92,7 +97,7 @@ function getMeasurements(data) {
 
 
 async function goForward() {
-  
+  animation()
   const drink = document.querySelector("input").value
   const response = await fetch(
     `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`
@@ -110,6 +115,7 @@ async function goForward() {
 }
 
 async function goBack() {
+  animation();
   const drink = document.querySelector("input").value
   const response = await fetch(
     `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`
